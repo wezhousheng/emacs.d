@@ -1,3 +1,7 @@
+;;; init-org.el --- Org-mode config -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
+
 (when *is-a-mac*
   (maybe-require-package 'grab-mac-link))
 
@@ -128,9 +132,7 @@ typical word processor."
 (after-load 'org-agenda
   (add-to-list 'org-agenda-after-show-hook 'org-show-entry))
 
-(defadvice org-refile (after sanityinc/save-all-after-refile activate)
-  "Save all org buffers after each refile operation."
-  (org-save-all-org-buffers))
+(advice-add 'org-refile :after (lambda (&rest _) (org-save-all-org-buffers)))
 
 ;; Exclude DONE state tasks from refile targets
 (defun sanityinc/verify-refile-target ()
@@ -383,3 +385,4 @@ typical word processor."
 
 
 (provide 'init-org)
+;;; init-org.el ends here
