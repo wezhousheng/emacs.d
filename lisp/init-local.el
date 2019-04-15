@@ -3,8 +3,7 @@
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "GOPATH"))
 
-(maybe-require-package 'go-guru)
-(require 'go-guru)
+(require-package 'go-guru)
 (add-hook 'before-save-hook #'gofmt-before-save)
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "M-.") #'godef-jump)))
@@ -19,8 +18,7 @@
 (setq interprogram-cut-function 'paste-to-osx)
 (setq interprogram-paste-function 'copy-from-osx)
 
-(maybe-require-package 'multi-term)
-(require 'multi-term)
+(require-package 'multi-term)
 
 ;;smerge-ediff
 (defun ediff-copy-both-to-C ()
