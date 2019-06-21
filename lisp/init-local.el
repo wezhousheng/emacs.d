@@ -48,4 +48,7 @@
            (list "-a" "firefox" url))))
 (setq flymd-browser-open-function 'my-flymd-browser-function)
 
+;;;flutter
+(require-package 'dart-mode)
+
 (provide 'init-local)
