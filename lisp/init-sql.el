@@ -2,18 +2,9 @@
 ;;; Commentary:
 ;;; Code:
 
-(after-load 'sql
+(with-eval-after-load 'sql
   ;; sql-mode pretty much requires your psql to be uncustomised from stock settings
-  (push "--no-psqlrc" sql-postgres-options))
-
-(defun sanityinc/fix-postgres-prompt-regexp ()
-  "Work around https://debbugs.gnu.org/cgi/bugreport.cgi?bug=22596.
-Fix for the above hasn't been released as of Emacs 25.2."
-  (when (eq sql-product 'postgres)
-    (setq-local sql-prompt-regexp "^[[:alnum:]_]*=[#>] ")
-    (setq-local sql-prompt-cont-regexp "^[[:alnum:]_]*[-(][#>] ")))
-
-(add-hook 'sql-interactive-mode-hook 'sanityinc/fix-postgres-prompt-regexp)
+  (add-to-list 'sql-postgres-options "--no-psqlrc"))
 
 (defun sanityinc/pop-to-sqli-buffer ()
   "Switch to the corresponding sqli buffer."
@@ -26,7 +17,7 @@ Fix for the above hasn't been released as of Emacs 25.2."
     (when sql-buffer
       (sanityinc/pop-to-sqli-buffer))))
 
-(after-load 'sql
+(with-eval-after-load 'sql
   (define-key sql-mode-map (kbd "C-c C-z") 'sanityinc/pop-to-sqli-buffer)
   (when (package-installed-p 'dash-at-point)
     (defun sanityinc/maybe-set-dash-db-docset (&rest _)
@@ -38,7 +29,7 @@ Fix for the above hasn't been released as of Emacs 25.2."
     (advice-add 'sql-set-product :after 'sanityinc/maybe-set-dash-db-docset)))
 
 (setq-default sql-input-ring-file-name
-              (expand-file-name ".sqli_history" user-emacs-directory))
+              (locate-user-emacs-file ".sqli_history"))
 
 ;; See my answer to https://emacs.stackexchange.com/questions/657/why-do-sql-mode-and-sql-interactive-mode-not-highlight-strings-the-same-way/673
 (defun sanityinc/font-lock-everything-in-sql-interactive-mode ()
@@ -48,7 +39,7 @@ Fix for the above hasn't been released as of Emacs 25.2."
 
 
 (require-package 'sqlformat)
-(after-load 'sql
+(with-eval-after-load 'sql
   (define-key sql-mode-map (kbd "C-c C-f") 'sqlformat))
 
 ;; Package ideas:
@@ -56,7 +47,7 @@ Fix for the above hasn't been released as of Emacs 25.2."
 (defun sanityinc/sql-explain-region-as-json (beg end &optional copy)
   "Explain the SQL between BEG and END in detailed JSON format.
 This is suitable for pasting into tools such as
-http://tatiyants.com/pev/.
+https://explain.dalibo.com/.
 
 When the prefix argument COPY is non-nil, do not display the
 resulting JSON, but instead copy it to the kill ring.
@@ -110,15 +101,8 @@ This command currently blocks the UI, sorry."
                 (display-buffer (current-buffer))
                 (user-error "EXPLAIN failed")))))))))
 
-
-;; Submitted upstream as https://github.com/stanaka/dash-at-point/pull/28
-(after-load 'sql
-  (after-load 'dash-at-point
-    (add-to-list 'dash-at-point-mode-alist '(sql-mode . "psql,mysql,sqlite,postgis"))))
-
-
-(after-load 'page-break-lines
-  (push 'sql-mode page-break-lines-modes))
+(with-eval-after-load 'page-break-lines
+  (add-to-list 'page-break-lines-modes 'sql-mode))
 
 (provide 'init-sql)
 ;;; init-sql.el ends here

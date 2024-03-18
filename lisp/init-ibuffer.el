@@ -6,10 +6,6 @@
 
 ;;; Code:
 
-(require-package 'fullframe)
-(after-load 'ibuffer
- (fullframe ibuffer ibuffer-quit))
-
 (require-package 'ibuffer-vc)
 
 (defun ibuffer-set-up-preferred-filters ()
@@ -21,8 +17,10 @@
 
 (setq-default ibuffer-show-empty-filter-groups nil)
 
+(sanityinc/fullframe-mode 'ibuffer-mode)
 
-(after-load 'ibuffer
+
+(with-eval-after-load 'ibuffer
   ;; Use human readable Size column instead of original one
   (define-ibuffer-column size-h
     (:name "Size" :inline t)
