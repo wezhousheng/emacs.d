@@ -51,4 +51,7 @@
 ;;;flutter
 (require-package 'dart-mode)
 
+(require-package 'undo-tree)
+(global-undo-tree-mode)
+
 (provide 'init-local)
