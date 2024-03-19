@@ -169,6 +169,8 @@
            (treesit-available-p))
   (require 'init-treesitter))
 
+(require-package 'undo-tree)
+(global-undo-tree-mode)
 
 
 ;; Allow access from emacsclient
